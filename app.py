@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -11,6 +11,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///blog.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 
 db=SQLAlchemy(app)
 
@@ -35,11 +36,32 @@ def index():
 def about():
     return render_template("about.html")
 
-@app.route('/user/<string:name>/<int:id>')
-def user(name, id):
-    return 'User page: '+name+'-'+str(id)
+# @app.route('/user/<string:name>/<int:id>')
+# def user(name, id):
+#     return 'User page: '+name+'-'+str(id)
 
+@app.route('/create_article', methods=['POST', 'GET'])
+def create_article():
+    if request.method == 'POST':
+        title= request.form['title']
+        intro =request.form['intro']
+        text = request.form['text']
+        category= request.form['category']
+        article=Article(title=title, intro=intro, text=text, category=category)
 
+        try:
+            db.session.add(article)
+            db.session.commit()
+            return redirect('/')
+        except:
+            return "При добавлении статьи возникла ошибка"
 
+    else:
+        return render_template("create_article.html")
+
+@app.route('/posts')
+def posts():
+    articles=Article.query.order_by(Article.date).all()
+    return render_template("posts.html", articles=articles)
 if __name__=='__main__':
     app.run(debug=True)

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{%block title%}
+Создать запись
+{% endblock %}
+
+{%block content%}
+<div class="container">
+    <h1>Добавить статью</h1>
+    <form method="post">
+        <input type="text" name="title" id="title" class="container form-control"
+               placeholder="Введите название статьи"><br>
+        <textarea name="intro" id="intro" class="container form-control"
+                  placeholder="Введите анонс"></textarea><br>
+        <textarea name="text" id="text" class="container form-control"
+                  placeholder="Введите текст статьи"></textarea><br>
+        <input type="text" name="category" id="category" class="container form-control"
+               placeholder="Введите категорию"><br>
+        <input type="submit" class="btn dnt-success" value="Отправить">
+    </form>
+</div>
+{% endblock %}
