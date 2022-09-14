@@ -52,7 +52,7 @@ def create_article():
         try:
             db.session.add(article)
             db.session.commit()
-            return redirect('/')
+            return redirect('/posts')
         except:
             return "При добавлении статьи возникла ошибка"
 
@@ -61,7 +61,7 @@ def create_article():
 
 @app.route('/posts')
 def posts():
-    articles=Article.query.order_by(Article.date).all()
+    articles=Article.query.order_by(-Article.date).all()
     return render_template("posts.html", articles=articles)
 if __name__=='__main__':
     app.run(debug=True)
