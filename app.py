@@ -71,21 +71,19 @@ def post_detail(id):
 
 @app.route('/posts/<int:id>/update', methods=['POST', 'GET'])
 def post_update(id):
+    article = Article.query.get(id)
 
     if request.method == 'POST':
-        title= request.form['title']
-        intro =request.form['intro']
-        text = request.form['text']
-        category= request.form['category']
-        article=Article(title=title, intro=intro, text=text, category=category)
+        article.title= request.form['title']
+        article.intro =request.form['intro']
+        article.text = request.form['text']
+        article.category= request.form['category']
 
         try:
-            db.session.add(article)
             db.session.commit()
             return redirect('/posts')
         except:
             return "При редактировании статьи возникла ошибка"
-
     else:
         article=Article.query.get(id)
         return render_template("post_update.html", article=article)
